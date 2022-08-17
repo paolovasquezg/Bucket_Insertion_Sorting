@@ -19,6 +19,7 @@ void bucketSort(container &cntr){
 
     int sz = size(cntr);
     vector<float> bucket[sz];
+    
     int max = cntr[0];
 
     for (auto itr: cntr){ // O(n)
