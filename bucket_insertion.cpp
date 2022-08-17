@@ -6,11 +6,13 @@
 using namespace std;
 
 
-// •Explicación teórica y procedural
-// •Fragmentos de código
-// •Gráficas
-// •Características de cada uno: Discusión sobre propiedad y cual más óptimo
-// •Preguntas
+// •	BUCKET Y SORT:  Explicación teórica, ejemplo y complejidad algorítmica
+// •	PROPIEDADES: Características sobre cada algoritmo: beneficios/desventajas
+// •	CODIGO: Captura de desarrollo en vscode, con el cálculo de la complejidad algorítmica
+// •	GRAFICAS: Respectiva gráfica de complejidad computacional de cada algoritmo
+// •	PREGUNTAS: Consultas a la clase de lo expuesto
+// •	BIBLIOGRAFIA: Registro de fuentes consultadas
+
 
 
 // Solo para contenedores con indice -->  Ej: Array/Vector
