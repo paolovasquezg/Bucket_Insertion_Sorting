@@ -31,7 +31,7 @@ void bucketSort(container &cntr){
     }
 
     for (int i = 0; i < sz; i++){ // O(n)
-        int bi = (sz * abs(int(cntr[i])))/abs(int(max+1));
+        int bi = (sz * abs(cntr[i]))/abs(max+1);
         bucket[bi].push_back(cntr[i]);
     }
 
