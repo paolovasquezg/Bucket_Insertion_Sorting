@@ -5,7 +5,6 @@
 
 using namespace std;
 
-
 // •	BUCKET Y SORT:  Explicación teórica, ejemplo y complejidad algorítmica
 // •	PROPIEDADES: Características sobre cada algoritmo: beneficios/desventajas
 // •	CODIGO: Captura de desarrollo en vscode, con el cálculo de la complejidad algorítmica
@@ -19,21 +18,15 @@ template <typename T, class container>
 void insertionSort(container &cntr)
 {
 
-    int sz = size(cntr);
+    long long int sz = size(cntr);
     T key;
 
-    for (int i = 1; i < sz; i++) // O(n)
-    {
+    for (long long int i = 1; i < sz; i++){
 
-        key = cntr[i]; // O(1)
-        int pv = i - 1; // O(1)
+        key = cntr[i];
+        long long int pv = i - 1;
 
-        while (pv >= 0 && cntr[pv] > key) // O(n)
-        // BC: Array esta ordenado --> En ninguna iteracion entra al bucle
-        // WC: Array esta ordenado al reves --> En cada iteracion tiene 
-        //     que pasar el elemento en cntr[i] al inicio del array
-        // AC: Realiza menos iteraciones que WC --> En promedio O(n)
-        {
+        while (pv >= 0 && cntr[pv] > key){ 
 
             cntr[pv + 1] = cntr[pv];
             pv -= 1;
@@ -43,142 +36,108 @@ void insertionSort(container &cntr)
     }
 }
 
-// BC: O (n * 1) --> O(n)
-// AC: O(n * n) --> O(n^2)
-// WC: O (n * n) --> O(n^2)
 
-// Solo para contenedores con indice -->  Ej: Array/Vector
 template<typename T, class container>
 void bucketExtension(container &cntr){
 
-    int sz = size(cntr);
-    vector<T> buckets[sz];
+    long long int sz = size(cntr);
+    vector<vector<long long int>> buckets;
+    buckets.resize(sz);
 
     T max = cntr[0];
 
-    for (auto itr : cntr) // O(n)
-    {
+    for (auto itr : cntr){
         if (itr > max)
             max = itr;
     }
 
-    for (int i = 0; i < sz; i++)
-    { // O(n)
-        int bi = (sz * abs(cntr[i])) / abs(max + 1);
+    for (long long int i = 0; i < sz; i++){
+        long long int bi = (sz * abs(cntr[i])) / abs(max + 1);
+        cout << bi << "xd" << "\n";
         buckets[bi].push_back(cntr[i]);
     }
 
-    for (int i = 0; i < sz; i++)
-    { // O(n)
-        // El sorting se puede hacer con cualquier algoritmo, pero se acostumbra con Insertion Sort: O(n^2)
-        // Con Merge Sort --> (n * log(n))
-        insertionSort<T>(buckets[i]); // O(n^2)
+    for (long long int i = 0; i < sz; i++){
+        insertionSort<T>(buckets[i]); 
     }
 
-    // BC: En cada bucket tenemos un elemento
-    //     --> No se ordenada nada --> O(n)
-    // AV: Se ordenan algunos buckets, con promedio
-    //     de k elementos en cada uno --> O(n*k^2) --> O(n*k)
-    // WC: Todos los elementos estan en un solo bucket --> O(n^2)
-
-    int index = 0;
-    for (int i = 0; i < sz; i++) // O(n)
-        for (int j = 0; j < buckets[i].size(); j++)
-            // BC: En cada bucket hay un elemento --> O(n)
-            // AV: En cada bucket hay un promedio de k elementos --> O(n*k)
-            // WC: Todos los elementos en un bucket --> O(n)
+    long long int index = 0;
+    for (long long int i = 0; i < sz; i++) // O(n)
+        for (long long int j = 0; j < buckets[i].size(); j++)
             cntr[index++] = buckets[i][j];
 }
-
-// BC: O(n + n + n + n) --> O(n)
-// AV: O(n + n + n*k + n*k) --> O(n*k)
-// WC: O(n + n + n^2 + n) --> O(n^2)
 
 
 // Solo para contenedores con indice -->  Ej: Array/Vector
 template<typename T, class container>
 void bucketSort(container &cntr){
 
-    T max = cntr[0];
-    T min = cntr[0];
+    T max = cntr[0]; T min = cntr[0];
 
-    for (auto itr : cntr){ // O(n)
+    for (auto itr : cntr){
         if (itr > max) max = itr;
-        else min = itr;
+        if (itr < min) min = itr;
     }
 
     if (min >= 0 && max >= 0){
         bucketExtension<T>(cntr);
-        // BC: O(n)
-        // AV: O(n*k)
-        // WC: O(n^2)
     }
-    else if (min < 0 && max < 0){
-        vector<T> temp;
+    else if (min < 0 && max < 0){ vector<T> temp;
 
-        for (auto itr : cntr)
-            temp.push_back(-1*itr);
-
+        for (auto itr : cntr) temp.push_back(-1*itr);
         bucketExtension<T>(temp);
-        // BC: O(n)
-        // AV: O(n*k)
-        // WC: O(n^2)
 
-        for (int i =0; i < size(cntr); i++){ // 0(n)
+        for (long long int i =0; i < size(cntr); i++){
             cntr[i] = -1*temp[size(cntr) - 1 - i];
         }
     }
     else{
-        vector<T> pos;
-        vector<T> neg;
+        vector<T> pos; vector<T> neg;
 
-        for (auto itr: cntr){ // O(n)
+        for (auto itr: cntr){
             if (itr < 0)
                 neg.push_back(-1*itr);
             else
                 pos.push_back(itr);
         }
-
         bucketExtension<T>(pos);
         bucketExtension<T>(neg);
+        
 
-        // BC: O(n)
-        // AV: O(n*k)
-        // WC: O(n^2)
+        for (long long int i = 0; i < neg.size(); i++){
+            cntr[i] = -1*neg[neg.size() - 1 - i];}
 
-        for (int i = 0; i < neg.size(); i++){ // O(s)
-            cntr[i] = -1*neg[neg.size() - 1 - i];
-        }
-
-        for (int j = neg.size(); j < size(cntr); j++){ // O(n-s)
-            cntr[j] = pos[j - neg.size()];
-        }
-
-    }
+        for (long long int j = neg.size(); j < size(cntr); j++){
+            cntr[j] = pos[j - neg.size()];}
+            }
 }
-
-// BC: O(n)
-// AV: O(n*k)
-// WC: O(n^2)
 
 int main(){
 
-    vector<int> arr = {1,0,-2,-1}; 
-    bucketSort<int>(arr);
-    cout << "1. Sorting con Bucket Sort: " << endl;
-    for (auto itr : arr)
+    vector<long long int> arr;
+    long long int n = 1000000;
+
+    for (long long int i = n; i > 0; i--){
+        arr.push_back(i);
+    }
+
+    vector<long long int> arr2;
+
+    for (long long int i = n; i > 0; i--)
     {
-        cout << itr << " ";
-}
+        arr2.push_back(i);
+    }
 
-cout << endl << endl;
+    bucketSort<long long int>(arr);
+    // insertionSort<long long int>(arr2);
 
-vector<int> vc = {2,8,5,3,9,4};
-insertionSort<int>(vc);
-cout << "2. Sorting con Insertion Sort: " << endl;
-for (auto itr : vc){
-    cout << itr << " ";
-}
+    for (long long int i = 0; i < n; i++){
+        cout << arr[i] << "\n";
+        if (arr[i] > arr[i+1]){
+            cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!";
+            i = n;
+        }
+    }
 
 return 0;
 }
